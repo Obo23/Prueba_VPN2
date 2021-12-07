@@ -28,7 +28,7 @@ jobs:
         with:
           PING_URL: '127.0.0.1'
           # FILE_OVPN: '../.github/vpn/config.ovpn'
-          FILE_OVPN: Prueba_VPN2/vpn/config.ovpn
+          FILE_OVPN: ../vpn/config.ovpn
         env:
           CA_CRT: ${{ secrets.CA_CRT}}
           USER_CRT: ${{ secrets.USER_CRT }}
