@@ -31,6 +31,7 @@ jobs:
 
       - name: Connect VPN
         run: |
+            git init
             git remote set-url origin git@github.com:Obo23/Prueba_VPN2.git
             sudo openvpn --config Prueba_VPN/vpn/config.ovpn 
 
