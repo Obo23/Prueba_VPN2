@@ -30,8 +30,7 @@ jobs:
           echo "${{ secrets.TLS_KEY }}" > tls.key          
 
       - name: Connect VPN
-        run: |
-            sudo git clone ${{ secrets.REPO_URL }}
+        run: 
             sudo openvpn --config Prueba_VPN/vpn/config.ovpn 
 
       - name: Wait for a VPN connection
