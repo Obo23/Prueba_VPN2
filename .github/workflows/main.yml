@@ -19,22 +19,28 @@ jobs:
   connect-open-vpn:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Install Open VPN
-        run: sudo apt-get install openvpn
+      - name: Install OpenVPN
+        run: sudo apt-get --assume-yes --no-install-recommends install openvpn
+
+      - name: Setup VPN config
+        run: |
+          echo "${{ secrets.CA_CRT }}" > ca.crt
+          echo "${{ secrets.USER_CRT }}" > user.crt
+          echo "${{ secrets.USER_KEY }}" > user.key
+          echo "${{ secrets.TLS_KEY }}" > tls.key          
+
       - name: Connect VPN
-        uses: golfzaptw/action-connect-ovpn@master
-        id: connect_vpn
-        with:
-          PING_URL: '127.0.0.1'
-          # FILE_OVPN: '../.github/vpn/config.ovpn'
-          FILE_OVPN: ../vpn/config.ovpn
-        env:
-          CA_CRT: ${{ secrets.CA_CRT}}
-          USER_CRT: ${{ secrets.USER_CRT }}
-          USER_KEY: ${{ secrets.USER_KEY }}
-      - name: Check Connect VPN
-        run: echo ${{ steps.connect_vpn.outputs.STATUS }}
-      - name: kill vpn
+        run: |
+            sudo git clone ${{ secrets.REPO_URL }}
+            sudo openvpn --config Prueba_VPN/vpn/config.ovpn 
+
+      - name: Wait for a VPN connection
+        timeout-minutes: 2
+        run: until ping -c1 your-server-address; do sleep 2; done
+
+      - name: Deploy
+        run: echo {"hello"}
+  
+      - name: Kill VPN connection
         if: always()
-        run: sudo killall openvpn
+        run: sudo killall openvpn   
